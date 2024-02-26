@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main() {
+    char input[100];
+    int i = 0;
+    
+    printf("Enter an expression: ");
+    fgets(input, sizeof(input), stdin);
+    
+    while (input[i] != '\0') {
+        if (isspace(input[i])) {
+            i++;
+            continue;
+        }
+        
+        if (input[i] == '+' || input[i] == '-' || input[i] == '*' || input[i] == '/') {
+            printf("Operator: %c\n", input[i]);
+        }
+        
+        i++;
+    }
+    
+    return 0;
+}
