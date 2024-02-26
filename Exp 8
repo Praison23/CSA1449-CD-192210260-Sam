@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_SYMBOLS 100
+
+typedef struct {
+    char name[20];
+    int value;
+} SymbolEntry;
+
+typedef struct {
+    SymbolEntry entries[MAX_SYMBOLS];
+    int count;
+} SymbolTable;
+
+void initialize(SymbolTable *table) {
+    table->count = 0;
+}
+
+void insert(SymbolTable *table, const char *name, int value) {
+    if (table->count < MAX_SYMBOLS) {
+        strncpy(table->entries[table->count].name, name, sizeof(table->entries[table->count].name) - 1);
+        table->entries[table->count].name[sizeof(table->entries[table->count].name) - 1] = '\0'; 
+        table->entries[table->count].value = value;
+        table->count++;
+        printf("Inserted: %s = %d\n", name, value);
+    } else {
+        printf("Symbol table full. Cannot insert.\n");
+    }
+}
+
+int search(SymbolTable *table, const char *name) {
+    for (int i = 0; i < table->count; ++i) {
+        if (strcmp(table->entries[i].name, name) == 0) {
+            printf("Found: %s = %d\n", name, table->entries[i].value);
+            return table->entries[i].value;
+        }
+    }
+    printf("Symbol '%s' not found\n", name);
+    return -1;
+}
+
+void deleteSymbol(SymbolTable *table, const char *name) {
+    int found = 0;
+    for (int i = 0; i < table->count; ++i) {
+        if (strcmp(table->entries[i].name, name) == 0) {
+            printf("Deleted: %s = %d\n", name, table->entries[i].value);
+
+            for (int j = i; j < table->count - 1; ++j) {
+                table->entries[j] = table->entries[j + 1];
+            }
+            table->count--;
+            found = 1;
+            break;
+        }
+    }
+    if (!found)
+        printf("Symbol '%s' not found. Cannot delete.\n", name);
+}
+
+void display(SymbolTable *table) {
+    printf("Symbol Table:\n");
+    printf("+-------------------+-------+\n");
+    printf("|       Name        | Value |\n");
+    printf("+-------------------+-------+\n");
+    for (int i = 0; i < table->count; ++i) {
+        printf("| %-17s | %5d |\n", table->entries[i].name, table->entries[i].value);
+    }
+    printf("+-------------------+-------+\n");
+}
+
+int main() {
+    SymbolTable table;
+    initialize(&table);
+
+    char name[20];
+    int value;
+    char choice;
+
+    do {
+        printf("\nEnter symbol name: ");
+        scanf("%s", name);
+        printf("Enter value: ");
+        scanf("%d", &value);
+        insert(&table, name, value);
+
+        printf("\nDo you want to enter another symbol? (y/n): ");
+        scanf(" %c", &choice); 
+
+    } while (choice == 'y' || choice == 'Y');
+
+    display(&table);
+
+    char searchName[20];
+    printf("\nEnter symbol to search: ");
+    scanf("%s", searchName);
+    search(&table, searchName);
+
+    char deleteName[20];
+    printf("\nEnter symbol to delete: ");
+    scanf("%s", deleteName);
+    deleteSymbol(&table, deleteName);
+
+    display(&table);
+
+    return 0;
+}
