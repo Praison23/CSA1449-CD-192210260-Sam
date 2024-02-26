@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <string.h>
+int isGrammarSatisfied(char *input) {
+    int i = 0;
+
+    if (input[i] == 'a')
+        i++;
+    else if (input[i] != '\0')
+        printf("Expecting 'a', but found '%c'.\n", input[i]);
+
+    if (input[i] == 'b')
+        i++;
+    else if (input[i] != '\0')
+        printf("Expecting 'b', but found '%c'.\n", input[i]);
+
+    if (input[i] != '\0')
+        printf("Unexpected characters after '%c'.\n", input[i]);
+
+    return input[i] == '\0';
+}
+
+int main() {
+    char input[100];
+    char choice;
+
+    do {
+        printf("Enter a string: ");
+        scanf("%s", input);
+
+        if (isGrammarSatisfied(input))
+            printf("Input string satisfies the grammar.\n");
+        else
+            printf("Input string does not satisfy the grammar.\n");
+
+        printf("Do you wish to enter another input? (y/n): ");
+        scanf(" %c", &choice); 
+
+    } while (choice == 'y' || choice == 'Y');
+
+    return 0;
+}
