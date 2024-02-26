@@ -1,0 +1,122 @@
+#include <stdio.h>
+#include <string.h>
+
+#define SUCCESS 1
+#define FAILED 0
+
+int E(), Edash(), T(), Tdash(), F();
+
+const char *cursor;
+char string[64];
+
+int main() {
+    char choice;
+    
+    do {
+        printf("Enter the string: ");
+        scanf("%s", string);
+        cursor = string;
+        printf("\n+--------------+---------------------+\n");
+        printf("| %-12s | %-19s |\n", "Input", "Action");
+        printf("+--------------+---------------------+\n");
+
+        if (E() && *cursor == '\0') {
+            printf("+--------------+---------------------+\n");
+            puts("| String is successfully parsed      |");
+        } else {
+            printf("+--------------+---------------------+\n");
+            puts("| Error in parsing String           |");
+        }
+        printf("+--------------+---------------------+\n");
+
+        printf("\nDo you wish to enter another input (y/n)? ");
+        scanf(" %c", &choice);
+
+    } while (choice == 'y' || choice == 'Y');
+
+    return 0;
+}
+
+int E() {
+    printf("| %-12s | %-19s |\n", cursor, "E -> T E'");
+    if (T()) {
+        if (Edash())
+            return SUCCESS;
+        else
+            return FAILED;
+    } else
+        return FAILED;
+}
+
+int Edash() {
+    if (*cursor == '+') {
+        printf("| %-12s | %-19s |\n", cursor, "E' -> + T E'");
+        cursor++;
+        if (T()) {
+            if (Edash())
+                return SUCCESS;
+            else
+                return FAILED;
+        } else
+            return FAILED;
+    } else if (*cursor == '\0') {
+        printf("| %-12s | %-19s |\n", cursor, "E' -> $");
+        return SUCCESS;
+    } else {
+        printf("| %-12s | %-19s |\n", cursor, "Error in parsing");
+        return FAILED;
+    }
+}
+
+int T() {
+    printf("| %-12s | %-19s |\n", cursor, "T -> F T'");
+    if (F()) {
+        if (Tdash())
+            return SUCCESS;
+        else
+            return FAILED;
+    } else
+        return FAILED;
+}
+
+int Tdash() {
+    if (*cursor == '*') {
+        printf("| %-12s | %-19s |\n", cursor, "T' -> * F T'");
+        cursor++;
+        if (F()) {
+            if (Tdash())
+                return SUCCESS;
+            else
+                return FAILED;
+        } else
+            return FAILED;
+    } else if (*cursor == '+' || *cursor == '\0') {
+        printf("| %-12s | %-19s |\n", cursor, "T' -> $");
+        return SUCCESS;
+    } else {
+        printf("| %-12s | %-19s |\n", cursor, "Error in parsing");
+        return FAILED;
+    }
+}
+
+int F() {
+    if (*cursor == '(') {
+        printf("| %-12s | %-19s |\n", cursor, "F -> ( E )");
+        cursor++;
+        if (E()) {
+            if (*cursor == ')') {
+                cursor++;
+                return SUCCESS;
+            } else
+                return FAILED;
+        } else
+            return FAILED;
+    } else if (*cursor == 'i') {
+        printf("| %-12s | %-19s |\n", cursor, "F -> i");
+        cursor++;
+        return SUCCESS;
+    } else {
+        printf("| %-12s | %-19s |\n", cursor, "Error in parsing");
+        return FAILED;
+    }
+}
