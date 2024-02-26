@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#define MAX_INPUT_LENGTH 1000
+#define MAX_IDENTIFIER_LENGTH 50
+#define MAX_CONSTANT_LENGTH 50
+int is_operator(char ch) {
+    char operators[] = "+-*/=";
+    for (int i = 0; i < strlen(operators); i++) {
+        if (ch == operators[i])
+            return 1;
+    }
+    return 0;
+}
+int is_separator(char ch) {
+    return ch == ' ' || ch == '\t' || ch == '\n';
+}
+void analyze_tokens(char *input) {
+    int length = strlen(input);
+    int i = 0;
+    while (i < length) {
+        while (is_separator(input[i])) {
+            i++;
+        }
+        if (isalpha(input[i])) {
+            char identifier[MAX_IDENTIFIER_LENGTH];
+            int j = 0;
+            while (isalnum(input[i]) && j < MAX_IDENTIFIER_LENGTH - 1) {
+                identifier[j++] = input[i++];
+            }
+            identifier[j] = '\0';
+            printf("Identifier: %s\n", identifier);
+        }
+        else if (isdigit(input[i])) {
+            char constant[MAX_CONSTANT_LENGTH];
+            int j = 0;
+            while (isdigit(input[i]) && j < MAX_CONSTANT_LENGTH - 1) {
+                constant[j++] = input[i++];
+            }
+            constant[j] = '\0';
+            printf("Constant: %s\n", constant);
+        }
+        else if (is_operator(input[i])) {
+            printf("Operator: %c\n", input[i]);
+            i++;
+        }
+        else {
+            i++;
+        }
+    }
+}
+int main() {
+    char input[MAX_INPUT_LENGTH];
+    printf("Enter input code:\n");
+    fgets(input, MAX_INPUT_LENGTH, stdin);
+    analyze_tokens(input);
+    return 0;
+}
