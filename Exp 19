@@ -1,0 +1,33 @@
+%{
+#include <stdio.h>
+#include <string.h>
+#define MAX_TAGS 1000
+char tags[MAX_TAGS][256]; 
+int tagCount = 0;
+%}
+
+%%
+
+"<".*">" { strncpy(tags[tagCount++], yytext, sizeof(tags[0])); }
+\n      ; 
+.       ;
+
+%%
+
+int main() {
+    printf("Enter your HTML code (Ctrl+D to end):\n");
+
+    yylex();
+
+    printf("\nHTML Tags:\n");
+    for (int i = 0; i < tagCount; i++) {
+        printf("%s\n", tags[i]);
+    }
+
+    return 0;
+}
+
+
+int yywrap() {
+    return 1; 
+}
