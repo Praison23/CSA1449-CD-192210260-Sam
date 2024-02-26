@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
+bool is_valid_identifier_char(char c) {
+    return isalpha(c) || isdigit(c) || c == '_';
+}
+bool is_valid_identifier(const char *identifier) {
+    if (identifier[0] == '\0' || isdigit(identifier[0])) {
+        return false;
+    }
+
+    for (int i = 0; i < strlen(identifier); i++) {
+        if (!is_valid_identifier_char(identifier[i])) {
+            return false;
+        }
+    }
+
+    return true;
+}
+int main() {
+    char identifier[100];
+    char choice;
+    do {
+        printf("Enter an identifier: ");
+        scanf("%s", identifier);
+
+        if (is_valid_identifier(identifier)) {
+            printf("The identifier '%s' is valid.\n", identifier);
+        } else {
+            printf("The identifier '%s' is not valid.\n", identifier);
+        }
+
+        printf("Do you want to enter another identifier? (y/n): ");
+        scanf(" %c", &choice);  
+        while ((getchar()) != '\n');
+    } while (choice == 'y' || choice == 'Y');
+
+    return 0;
+}
