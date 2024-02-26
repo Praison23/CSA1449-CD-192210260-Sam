@@ -1,0 +1,32 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_LINES 1000
+char lines[MAX_LINES][256];
+int lineCount = 0;
+%}
+
+%%
+
+\n      { strncpy(lines[lineCount++], yytext, sizeof(lines[0])); }
+.       { strncpy(lines[lineCount++], yytext, sizeof(lines[0])); }
+
+%%
+
+int main() {
+    printf("Enter your C program (Ctrl+D to end):\n");
+
+    yylex();
+
+    printf("\nC Program with Line Numbers:\n");
+    for (int i = 0; i < lineCount; i++) {
+        printf("%d: %s", i + 1, lines[i]);
+    }
+
+    return 0;
+}
+
+int yywrap() {
+    return 1; 
+}
