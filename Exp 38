@@ -1,0 +1,49 @@
+%{
+#include <stdio.h>
+#include <string.h>
+int word_count = 0;
+char target_word[100]; // Maximum word length, adjust as needed
+%}
+
+%%
+[a-zA-Z]+       {
+                    if (strcmp(yytext, target_word) == 0) {
+                        word_count++;
+                    }
+                }
+.               ; /* Ignore any other characters */
+
+%%
+
+int main() {
+    char input[4096]; // Adjust the size based on your needs
+    printf("Enter a sentence:\n");
+
+    if (fgets(input, sizeof(input), stdin) == NULL) {
+        fprintf(stderr, "Error reading input.\n");
+        return 1;
+    }
+
+    // Remove newline character if present
+    for (int i = 0; input[i] != '\0'; i++) {
+        if (input[i] == '\n') {
+            input[i] = '\0';
+            break;
+        }
+    }
+
+    printf("Enter the word to count frequency:\n");
+    scanf("%s", target_word);
+
+    // Set the input buffer
+    yy_scan_string(input);
+
+    // Start parsing
+    yylex();
+
+    // Print the frequency of the target word
+    printf("Frequency of '%s': %d\n", target_word, word_count);
+
+    return 0;
+}
+int yywrap() { return 1; }
