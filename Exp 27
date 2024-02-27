@@ -1,0 +1,24 @@
+%{
+#include <stdio.h>
+#include <string.h>
+%}
+
+%%
+int|char|float|double|void    { printf("Keyword: %s\n", yytext); }
+[0-9]+                        { printf("Integer Literal: %s\n", yytext); }
+\"([^\\\"]|\\.)*\"            { printf("String Literal: %s\n", yytext); }
+\'([^\\\']|\\.)*\'            { printf("Character Literal: %s\n", yytext); }
+[_a-zA-Z][_a-zA-Z0-9]*        { printf("Identifier: %s\n", yytext); }
+[+\-*/=<>]                    { printf("Operator: %s\n", yytext); }
+[;,()]                        { printf("Punctuation: %s\n", yytext); }
+[ \t]                         ;  // skip whitespaces
+\n                            { printf("End of Line\n"); }
+.                             { printf("Other: %s\n", yytext); }
+
+%%
+
+int main() {
+    yylex();
+    return 0;
+}
+int yywrap() { return 1; }
