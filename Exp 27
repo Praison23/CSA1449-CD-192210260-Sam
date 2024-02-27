@@ -1,0 +1,16 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+[6-9][0-9]{9}   { printf("Valid mobile number: %s\n", yytext); }
+.               ;
+
+%%
+
+int main() {
+    yyin = stdin;  
+    yylex();
+    return 0;
+}
+int yywrap() { return 1; }
