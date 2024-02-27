@@ -1,0 +1,46 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+
+%%
+// Use a custom function to validate the URL
+int validateURL(char *url) {
+    // Basic URL pattern (starts with http:// or https://)
+    if(sscanf(url, "http://%*s") == 1 || sscanf(url, "https://%*s") == 1) {
+        printf("Valid URL: %s\n", url);
+        return 1;
+    } else {
+        printf("Invalid URL: %s\n", url);
+        return 0;
+    }
+}
+
+int main() {
+    char input[4096]; // Adjust the size based on your needs
+    printf("Enter the URL to validate:\n");
+
+    if (fgets(input, sizeof(input), stdin) == NULL) {
+        fprintf(stderr, "Error reading input.\n");
+        return 1;
+    }
+
+    // Remove newline character if present
+    for (int i = 0; input[i] != '\0'; i++) {
+        if (input[i] == '\n') {
+            input[i] = '\0';
+            break;
+        }
+    }
+
+    // Validate the URL
+    if (validateURL(input)) {
+        printf("URL is valid!\n");
+    } else {
+        printf("URL is invalid!\n");
+    }
+
+    return 0;
+}
+int yywrap() { return 1; }
