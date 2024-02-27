@@ -1,0 +1,43 @@
+%{
+#include <stdio.h>
+
+int positiveCount = 0;
+int negativeCount = 0;
+%}
+
+%%
+
+[+-]?[0-9]+      {
+                    if(yytext[0] == '+') {
+                        positiveCount++;
+                    } else if(yytext[0] == '-') {
+                        negativeCount++;
+                    }
+                    printf("Number: %s\n", yytext);
+                }
+.               ; /* Ignore any other characters */
+
+%%
+
+int main() {
+    char input[4096]; // Adjust the size based on your needs
+    printf("Enter your statement:\n");
+
+    if (fgets(input, sizeof(input), stdin) == NULL) {
+        fprintf(stderr, "Error reading input.\n");
+        return 1;
+    }
+
+    // Set the input buffer
+    yy_scan_string(input);
+
+    // Start parsing
+    yylex();
+
+    // Print counts
+    printf("Positive Numbers Count: %d\n", positiveCount);
+    printf("Negative Numbers Count: %d\n", negativeCount);
+
+    return 0;
+}
+int yywrap() { return 1; }
