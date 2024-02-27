@@ -1,0 +1,30 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+[aeiouAEIOU]    { printf("Vowel: %s\n", yytext); }
+[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]  { printf("Consonant: %s\n", yytext); }
+[ \t\n]         ;  // skip whitespaces
+
+%%
+
+int main() {
+    int vowelCount = 0;
+    int consonantCount = 0;
+    yylex();
+
+    while (yylex() != 0) {
+        if (yytext[0] == 'V') {
+            vowelCount++;
+        } else if (yytext[0] == 'C') {
+            consonantCount++;
+        }
+    }
+
+    printf("Number of Vowels: %d\n", vowelCount);
+    printf("Number of Consonants: %d\n", consonantCount);
+
+    return 0;
+}
+int yywrap() { return 1; }
