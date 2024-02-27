@@ -1,0 +1,30 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+
+[0-9]+          { printf("Number: %s\n", yytext); }
+[a-zA-Z]+       { printf("Word: %s\n", yytext); }
+.               ; /* Ignore any other characters */
+
+%%
+
+int main() {
+    char input[4096]; // Adjust the size based on your needs
+    printf("Enter your statement:\n");
+
+    if (fgets(input, sizeof(input), stdin) == NULL) {
+        fprintf(stderr, "Error reading input.\n");
+        return 1;
+    }
+
+    // Set the input buffer
+    yy_scan_string(input);
+
+    // Start parsing
+    yylex();
+
+    return 0;
+}
+int yywrap() { return 1; }
