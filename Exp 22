@@ -1,0 +1,41 @@
+%{
+#include <stdio.h>
+int commentLines = 0;
+%}
+
+%x COMMENT
+
+%%
+
+"/*"    { BEGIN(COMMENT); }
+<COMMENT>"*/"   { BEGIN(INITIAL); }
+<COMMENT>.      { /* Ignore characters within comments */ }
+
+"//"    { commentLines++; while (input() != '\n'); }
+\n      { fprintf(yyout, "%s", yytext); }
+
+.       { fprintf(yyout, "%s", yytext); }
+
+%%
+
+int yywrap() { return 1; } // indicate no more input
+
+int main() {
+    printf("Enter your C program (Ctrl+D to end):\n");
+
+    yylex();
+
+    FILE *outputFile = fopen("comments_eliminated.txt", "w");
+    if (!outputFile) {
+        perror("Error opening output file");
+        return 1;
+    }
+
+    fprintf(outputFile, "\nNumber of Comment Lines: %d\n", commentLines);
+
+    fclose(outputFile);
+
+    printf("Comments eliminated. Output written to 'comments_eliminated.txt'\n");
+
+    return 0;
+}
